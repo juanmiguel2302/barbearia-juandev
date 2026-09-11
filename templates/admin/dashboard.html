@@ -1,0 +1,73 @@
+{% extends "admin/base_admin.html" %}
+
+{% block titulo %}Painel{% endblock %}
+
+{% block conteudo_admin %}
+
+<div class="admin-cabecalho">
+  <div>
+    <h1>Painel administrativo</h1>
+    <p>Visão geral da agenda e da configuração da {{ nome_barbearia }}.</p>
+  </div>
+</div>
+
+<div class="cartoes-resumo">
+  <div class="cartao-resumo">
+    <div class="cartao-resumo__numero">{{ total_disponiveis }}</div>
+    <div class="cartao-resumo__label">Horários disponíveis</div>
+  </div>
+  <div class="cartao-resumo">
+    <div class="cartao-resumo__numero">{{ total_reservados }}</div>
+    <div class="cartao-resumo__label">Horários reservados</div>
+  </div>
+  <div class="cartao-resumo">
+    <div class="cartao-resumo__numero">{{ total_servicos }}</div>
+    <div class="cartao-resumo__label">Serviços cadastrados</div>
+  </div>
+  <div class="cartao-resumo">
+    <div class="cartao-resumo__numero">{{ total_planos }}</div>
+    <div class="cartao-resumo__label">Planos mensais</div>
+  </div>
+</div>
+
+<div class="painel">
+  <h2>Próximos agendamentos</h2>
+  <p class="painel__legenda">Os 6 próximos horários já reservados por clientes.</p>
+
+  {% if proximos_agendamentos %}
+    <table class="tabela">
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Data</th>
+          <th>Hora</th>
+          <th>Telefone</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in proximos_agendamentos %}
+          <tr>
+            <td>{{ a.nome_cliente }}</td>
+            <td>{{ a.data|data_br }}</td>
+            <td>{{ a.hora }}</td>
+            <td>{{ a.telefone or "—" }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="vazio-tabela">Nenhum agendamento por enquanto.</p>
+  {% endif %}
+</div>
+
+<div class="painel">
+  <h2>Atalhos</h2>
+  <p class="painel__legenda">O que costuma ser feito primeiro por aqui.</p>
+  <div class="linha-botoes">
+    <a href="{{ url_for('admin_horarios') }}" class="botao botao--secundario">Abrir horários na agenda</a>
+    <a href="{{ url_for('admin_servicos') }}" class="botao botao--secundario">Editar valores dos cortes</a>
+    <a href="{{ url_for('admin_planos') }}" class="botao botao--secundario">Editar planos mensais</a>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entrar — {{ nome_barbearia }}</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="admin-corpo">
+
+  {% with mensagens = get_flashed_messages(with_categories=true) %}
+    {% if mensagens %}
+      <div class="mensagens">
+        {% for categoria, texto in mensagens %}
+          <div class="mensagem mensagem--{{ categoria }}">{{ texto }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <div class="login-pagina">
+    <div class="login-cartao">
+      <span class="marca">{{ nome_barbearia.split(' ')[0] }} <span>admin</span></span>
+      <p>Acesso restrito à administração da barbearia.</p>
+
+      <form method="post">
+        <div class="campo">
+          <label for="senha">Senha</label>
+          <input type="password" id="senha" name="senha" required autofocus>
+        </div>
+        <button type="submit" class="botao botao--primario botao--bloco">Entrar</button>
+      </form>
+
+      <a href="{{ url_for('index') }}" class="link-voltar">← Voltar para o site</a>
+    </div>
+  </div>
+
+</body>
+</html>

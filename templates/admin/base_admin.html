@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block titulo %}Painel administrativo{% endblock %} — {{ nome_barbearia }}</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="admin-corpo">
+
+  <div class="admin-topo">
+    <div class="admin-topo__conteudo">
+      <a href="{{ url_for('admin_dashboard') }}" class="marca">{{ nome_barbearia.split(' ')[0] }} <span>admin</span></a>
+
+      <nav class="admin-nav">
+        <a href="{{ url_for('admin_dashboard') }}" class="{{ 'ativo' if request.endpoint == 'admin_dashboard' }}">Painel</a>
+        <a href="{{ url_for('admin_horarios') }}" class="{{ 'ativo' if request.endpoint == 'admin_horarios' }}">Horários</a>
+        <a href="{{ url_for('admin_servicos') }}" class="{{ 'ativo' if request.endpoint == 'admin_servicos' }}">Serviços</a>
+        <a href="{{ url_for('admin_planos') }}" class="{{ 'ativo' if request.endpoint == 'admin_planos' }}">Planos</a>
+        <a href="{{ url_for('admin_agendamentos') }}" class="{{ 'ativo' if request.endpoint == 'admin_agendamentos' }}">Agendamentos</a>
+        <a href="{{ url_for('index') }}" target="_blank" rel="noopener">Ver site</a>
+        <a href="{{ url_for('admin_logout') }}">Sair</a>
+      </nav>
+    </div>
+  </div>
+
+  {% with mensagens = get_flashed_messages(with_categories=true) %}
+    {% if mensagens %}
+      <div class="mensagens">
+        {% for categoria, texto in mensagens %}
+          <div class="mensagem mensagem--{{ categoria }}">{{ texto }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <div class="admin-conteudo">
+    {% block conteudo_admin %}{% endblock %}
+  </div>
+
+</body>
+</html>

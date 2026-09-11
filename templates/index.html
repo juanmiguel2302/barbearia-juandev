@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+
+<section class="hero">
+  <div class="container hero__grade">
+    <div>
+      <h1 class="hero__titulo">Um corte bem-feito começa com um bom horário.</h1>
+      <p class="hero__subtitulo">Escolha o serviço, veja os horários livres e garanta o seu — sem criar conta, sem senha. Só o seu nome e pronto.</p>
+      <div class="hero__acoes">
+        <a href="#agendar" class="botao botao--primario">Agendar horário</a>
+        <a href="#planos" class="botao botao--secundario">Ver planos mensais</a>
+      </div>
+    </div>
+
+    <div class="hero__emblema">
+      
+        <circle cx="210" cy="210" r="170" fill="none" stroke="var(--brass)" stroke-width="1.5" opacity="0.9"/>
+        <circle cx="210" cy="210" r="150" fill="none" stroke="var(--brass)" stroke-width="1" opacity="0.4"/>
+        <line x1="210.0" y1="40.0" x2="210.0" y2="68.0" stroke="var(--brass)" stroke-width="2" opacity="0.9"/>
+        <line x1="254.0" y1="45.8" x2="250.9" y2="57.4" stroke="var(--brass)" stroke-width="1" opacity="0.45"/>
+        <line x1="295.0" y1="62.8" x2="289.0" y2="73.2" stroke="var(--brass)" stroke-width="1" opacity="0.45"/>
+        <line x1="330.2" y1="89.8" x2="321.7" y2="98.3" stroke="var(--brass)" stroke-width="1" opacity="0.45"/>
+        <line x1="357.2" y1="125.0" x2="346.8" y2="131.0" stroke="var(--brass)" stroke-width="1" opacity="0.45"/>
+        <line x1="374.2" y1="166.0" x2="362.6" y2="169.1" stroke="var(--brass)" stroke-width="1" opacity="0.45"/>
+        <line x1="380.0" y1="210.0" x2="352.0" y2="210.0" stroke="var(--brass)" stroke-width="2" opacity="0.9"/>
+        <line x1="374.2" y1="254.0" x2="362.6" y2="250.9" stroke="var(--brass)" stroke-width="1" opacity="0.45"/>
+        <line x1="357.2" y1="295.0" x2="346.8" y2="289.0" stroke="var(--brass)" stroke-width="1" opacity="0.45"/>
+        <line x1="330.2" y1="330.2" x2="321.7" y2="321.7" stroke="var(--brass)" stroke-width="1" opacity="0.45"/>
+        <line x1="295.0" y1="357.2" x2="289.0" y2="346.8" stroke="var(--brass)" stroke-width="1" opacity="0.45"/>
+        <line x1="254.0" y1="374.2" x2="250.9" y2="362.6" stroke="var(--brass)" stroke-width="1" opacity="0.45"/>
+        <line x1="210.0" y1="380.0" x2="210.0" y2="352.0" stroke="var(--brass)" stroke-width="2" opacity="0.9"/>
+        <line x1="166.0" y1="374.2" x2="169.1" y2="362.6" stroke="var(--brass)" stroke-width="1" opacity="0.45"/>
+        <line x1="125.0" y1="357.2" x2="131.0" y2="346.8" stroke="var(--brass)" stroke-width="1" opacity="0.45"/>
+        <line x1="89.8" y1="330.2" x2="98.3" y2="321.7" stroke="var(--brass)" stroke-width="1" opacity="0.45"/>
+        <line x1="62.8" y1="295.0" x2="73.2" y2="289.0" stroke="var(--brass)" stroke-width="1" opacity="0.45"/>
+        <line x1="45.8" y1="254.0" x2="57.4" y2="250.9" stroke="var(--brass)" stroke-width="1" opacity="0.45"/>
+        <line x1="40.0" y1="210.0" x2="68.0" y2="210.0" stroke="var(--brass)" stroke-width="2" opacity="0.9"/>
+        <line x1="45.8" y1="166.0" x2="57.4" y2="169.1" stroke="var(--brass)" stroke-width="1" opacity="0.45"/>
+        <line x1="62.8" y1="125.0" x2="73.2" y2="131.0" stroke="var(--brass)" stroke-width="1" opacity="0.45"/>
+        <line x1="89.8" y1="89.8" x2="98.3" y2="98.3" stroke="var(--brass)" stroke-width="1" opacity="0.45"/>
+        <line x1="125.0" y1="62.8" x2="131.0" y2="73.2" stroke="var(--brass)" stroke-width="1" opacity="0.45"/>
+        <line x1="166.0" y1="45.8" x2="169.1" y2="57.4" stroke="var(--brass)" stroke-width="1" opacity="0.45"/>
+        <text x="210" y="232" text-anchor="middle" class="emblema__monograma">JuanDev</text>
+        <text x="210" y="272" text-anchor="middle" class="emblema__legenda">Barbearia</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section class="secao" id="servicos">
+  <div class="container">
+    <div class="secao__cabecalho">
+      <h2>Serviços</h2>
+      <p>Valores definidos pela barbearia — sempre atualizados aqui antes de você chegar.</p>
+    </div>
+
+    {% if servicos %}
+      <div class="cardapio">
+        {% for s in servicos %}
+          <div class="cardapio__item">
+            <span class="cardapio__nome">
+              {{ s.nome }}
+              {% if s.descricao %}<span class="cardapio__descricao">{{ s.descricao }}</span>{% endif %}
+            </span>
+            <span class="cardapio__linha"></span>
+            <span class="cardapio__preco">R$ {{ "%.2f"|format(s.preco)|replace(".", ",") }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="aviso-vazio">Os serviços ainda não foram cadastrados. Volte em breve.</p>
+    {% endif %}
+  </div>
+</section>
+
+<section class="secao" id="planos">
+  <div class="container">
+    <div class="secao__cabecalho">
+      <h2>Planos mensais</h2>
+      <p>Para quem corta o cabelo com frequência e prefere resolver isso uma vez por mês.</p>
+    </div>
+
+    {% if planos %}
+      <div class="planos">
+        {% for p in planos %}
+          <div class="plano {% if loop.last and planos|length > 1 %}plano--destaque{% endif %}">
+            <div class="plano__nome">{{ p.nome }}</div>
+            {% if p.descricao %}<div class="plano__descricao">{{ p.descricao }}</div>{% endif %}
+            <div class="plano__preco">R$ {{ "%.2f"|format(p.preco)|replace(".", ",") }} <small>/ mês</small></div>
+            {% if p.beneficios %}
+              <ul class="plano__beneficios">
+                {% for linha in p.beneficios.split('\n') %}
+                  {% if linha.strip() %}<li>{{ linha.strip() }}</li>{% endif %}
+                {% endfor %}
+              </ul>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="aviso-vazio">Os planos ainda não foram cadastrados. Volte em breve.</p>
+    {% endif %}
+  </div>
+</section>
+
+<section class="secao" id="agendar">
+  <div class="container">
+    <div class="secao__cabecalho">
+      <h2>Agende seu horário</h2>
+      <p>Escolha um horário livre e deixe seu nome. Não é preciso criar conta.</p>
+    </div>
+
+    <div class="agendamento__grade">
+      <div class="agendamento__texto">
+        <p>Os horários abaixo são atualizados diretamente pela barbearia. Assim que alguém reserva um horário, ele sai da lista — então se você está vendo aqui, ele está livre.</p>
+        <p>Chegou um pouco antes? Sem problema, é só aguardar na recepção.</p>
+
+        <div class="agendamento__contato">
+          <strong>Prefere combinar por telefone?</strong>
+          {{ telefone_contato }} · {{ endereco }}
+        </div>
+      </div>
+
+      <div class="cartao-formulario">
+        {% if horarios_por_data %}
+          <form action="{{ url_for('agendar') }}" method="post">
+            <div class="campo">
+              <label for="nome">Seu nome</label>
+              <input type="text" id="nome" name="nome" placeholder="Como podemos te chamar" required maxlength="80">
+            </div>
+
+            <div class="campo">
+              <label for="telefone">Telefone (opcional)</label>
+              <input type="tel" id="telefone" name="telefone" placeholder="(00) 00000-0000" maxlength="20">
+            </div>
+
+            <div class="campo">
+              <label for="horario_id">Horário</label>
+              <select id="horario_id" name="horario_id" required>
+                <option value="" disabled selected>Escolha data e hora</option>
+                {% for data, lista in horarios_por_data.items() %}
+                  <optgroup label="{{ data|data_br }}">
+                    {% for h in lista %}
+                      <option value="{{ h.id }}">{{ h.hora }}</option>
+                    {% endfor %}
+                  </optgroup>
+                {% endfor %}
+              </select>
+            </div>
+
+            <button type="submit" class="botao botao--primario botao--bloco">Confirmar agendamento</button>
+          </form>
+        {% else %}
+          <p class="aviso-vazio">Nenhum horário disponível no momento. Volte em breve ou chame no telefone {{ telefone_contato }}.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

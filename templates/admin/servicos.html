@@ -1,0 +1,78 @@
+{% extends "admin/base_admin.html" %}
+
+{% block titulo %}Serviços{% endblock %}
+
+{% block conteudo_admin %}
+
+<div class="admin-cabecalho">
+  <div>
+    <h1>Serviços e valores</h1>
+    <p>Esses preços aparecem na seção "Serviços" do site.</p>
+  </div>
+</div>
+
+<div class="painel">
+  <h2>{{ "Editar serviço" if servico_edicao else "Adicionar serviço" }}</h2>
+  <p class="painel__legenda">{{ "Altere os dados e salve." if servico_edicao else "Nome, preço e uma descrição curta (opcional)." }}</p>
+
+  <form method="post">
+    {% if servico_edicao %}
+      <input type="hidden" name="servico_id" value="{{ servico_edicao.id }}">
+    {% endif %}
+    <div class="campo--linha">
+      <div class="campo">
+        <label for="nome">Nome do serviço</label>
+        <input type="text" id="nome" name="nome" required maxlength="60" value="{{ servico_edicao.nome if servico_edicao else '' }}">
+      </div>
+      <div class="campo">
+        <label for="preco">Preço (R$)</label>
+        <input type="text" id="preco" name="preco" required inputmode="decimal" placeholder="45,00" value="{{ '%.2f'|format(servico_edicao.preco)|replace('.', ',') if servico_edicao else '' }}">
+      </div>
+    </div>
+    <div class="campo">
+      <label for="descricao">Descrição (opcional)</label>
+      <input type="text" id="descricao" name="descricao" maxlength="120" placeholder="Ex.: tesoura e máquina, acabamento na navalha" value="{{ servico_edicao.descricao if servico_edicao else '' }}">
+    </div>
+    <div class="linha-botoes">
+      <button type="submit" class="botao botao--primario">{{ "Salvar alterações" if servico_edicao else "Adicionar serviço" }}</button>
+      {% if servico_edicao %}
+        <a href="{{ url_for('admin_servicos') }}" class="botao botao--secundario">Cancelar</a>
+      {% endif %}
+    </div>
+  </form>
+</div>
+
+<div class="painel">
+  <h2>Serviços cadastrados</h2>
+  {% if servicos %}
+    <table class="tabela">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Descrição</th>
+          <th>Preço</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in servicos %}
+          <tr>
+            <td>{{ s.nome }}</td>
+            <td>{{ s.descricao or "—" }}</td>
+            <td>R$ {{ "%.2f"|format(s.preco)|replace(".", ",") }}</td>
+            <td class="tabela__acoes">
+              <a href="{{ url_for('admin_servicos', editar=s.id) }}" class="botao botao--secundario botao--pequeno">Editar</a>
+              <form method="post" action="{{ url_for('admin_excluir_servico', servico_id=s.id) }}" onsubmit="return confirm('Remover este serviço?');">
+                <button type="submit" class="botao botao--perigo botao--pequeno">Excluir</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="vazio-tabela">Nenhum serviço cadastrado ainda.</p>
+  {% endif %}
+</div>
+
+{% endblock %}

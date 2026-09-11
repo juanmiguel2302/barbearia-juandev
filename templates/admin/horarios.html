@@ -1,0 +1,106 @@
+{% extends "admin/base_admin.html" %}
+
+{% block titulo %}Horários{% endblock %}
+
+{% block conteudo_admin %}
+
+<div class="admin-cabecalho">
+  <div>
+    <h1>Horários da agenda</h1>
+    <p>Defina os horários disponíveis para corte. Eles aparecem no site assim que salvos.</p>
+  </div>
+</div>
+
+<div class="painel">
+  <h2>Adicionar um horário</h2>
+  <p class="painel__legenda">Um horário por vez.</p>
+  <form method="post" class="formulario-grade">
+    <input type="hidden" name="acao" value="adicionar">
+    <div class="campo">
+      <label for="data">Data</label>
+      <input type="date" id="data" name="data" required>
+    </div>
+    <div class="campo">
+      <label for="hora">Hora</label>
+      <input type="time" id="hora" name="hora" required>
+    </div>
+    <button type="submit" class="botao botao--primario">Adicionar horário</button>
+  </form>
+</div>
+
+<div class="painel">
+  <h2>Gerar vários horários de uma vez</h2>
+  <p class="painel__legenda">Escolha um dia e um intervalo — os horários são criados automaticamente entre o início e o fim.</p>
+  <form method="post" class="formulario-grade">
+    <input type="hidden" name="acao" value="gerar">
+    <div class="campo">
+      <label for="data-gerar">Data</label>
+      <input type="date" id="data-gerar" name="data" required>
+    </div>
+    <div class="campo">
+      <label for="hora_inicio">Início</label>
+      <input type="time" id="hora_inicio" name="hora_inicio" required>
+    </div>
+    <div class="campo">
+      <label for="hora_fim">Fim</label>
+      <input type="time" id="hora_fim" name="hora_fim" required>
+    </div>
+    <div class="campo">
+      <label for="intervalo">Intervalo (minutos)</label>
+      <select id="intervalo" name="intervalo">
+        <option value="15">15</option>
+        <option value="30" selected>30</option>
+        <option value="45">45</option>
+        <option value="60">60</option>
+      </select>
+    </div>
+    <button type="submit" class="botao botao--primario">Gerar horários</button>
+  </form>
+</div>
+
+<div class="painel">
+  <h2>Agenda completa</h2>
+  <p class="painel__legenda">Horários livres e reservados, organizados por data.</p>
+
+  {% if horarios_por_data %}
+    {% for data, lista in horarios_por_data.items() %}
+      <div class="grupo-data">
+        <div class="grupo-data__titulo">{{ data|data_br }}</div>
+        <table class="tabela">
+          <thead>
+            <tr>
+              <th>Hora</th>
+              <th>Status</th>
+              <th>Cliente</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for h in lista %}
+              <tr>
+                <td>{{ h.hora }}</td>
+                <td>
+                  {% if h.disponivel %}
+                    <span class="selo selo--livre">Disponível</span>
+                  {% else %}
+                    <span class="selo selo--reservado">Reservado</span>
+                  {% endif %}
+                </td>
+                <td>{{ h.nome_cliente or "—" }}{% if h.telefone %} · {{ h.telefone }}{% endif %}</td>
+                <td class="tabela__acoes">
+                  <form method="post" action="{{ url_for('admin_excluir_horario', horario_id=h.id) }}" onsubmit="return confirm('Remover este horário da agenda?');">
+                    <button type="submit" class="botao botao--perigo botao--pequeno">Excluir</button>
+                  </form>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p class="vazio-tabela">Nenhum horário cadastrado ainda. Use os formulários acima para começar.</p>
+  {% endif %}
+</div>
+
+{% endblock %}

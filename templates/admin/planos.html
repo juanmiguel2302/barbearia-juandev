@@ -1,0 +1,82 @@
+{% extends "admin/base_admin.html" %}
+
+{% block titulo %}Planos{% endblock %}
+
+{% block conteudo_admin %}
+
+<div class="admin-cabecalho">
+  <div>
+    <h1>Planos mensais</h1>
+    <p>Cadastre os planos (o site foi pensado para dois, mas você pode adicionar mais se quiser).</p>
+  </div>
+</div>
+
+<div class="painel">
+  <h2>{{ "Editar plano" if plano_edicao else "Adicionar plano" }}</h2>
+  <p class="painel__legenda">Um benefício por linha — eles aparecem como lista no site.</p>
+
+  <form method="post">
+    {% if plano_edicao %}
+      <input type="hidden" name="plano_id" value="{{ plano_edicao.id }}">
+    {% endif %}
+    <div class="campo--linha">
+      <div class="campo">
+        <label for="nome">Nome do plano</label>
+        <input type="text" id="nome" name="nome" required maxlength="60" value="{{ plano_edicao.nome if plano_edicao else '' }}">
+      </div>
+      <div class="campo">
+        <label for="preco">Preço mensal (R$)</label>
+        <input type="text" id="preco" name="preco" required inputmode="decimal" placeholder="99,00" value="{{ '%.2f'|format(plano_edicao.preco)|replace('.', ',') if plano_edicao else '' }}">
+      </div>
+    </div>
+    <div class="campo">
+      <label for="descricao">Descrição curta</label>
+      <input type="text" id="descricao" name="descricao" maxlength="120" placeholder="Ex.: para quem gosta de manter o corte sempre em dia" value="{{ plano_edicao.descricao if plano_edicao else '' }}">
+    </div>
+    <div class="campo">
+      <label for="beneficios">Benefícios (um por linha)</label>
+      <textarea id="beneficios" name="beneficios" placeholder="2 cortes por mês&#10;Desconto em produtos&#10;Prioridade na agenda">{{ plano_edicao.beneficios if plano_edicao else '' }}</textarea>
+    </div>
+    <div class="linha-botoes">
+      <button type="submit" class="botao botao--primario">{{ "Salvar alterações" if plano_edicao else "Adicionar plano" }}</button>
+      {% if plano_edicao %}
+        <a href="{{ url_for('admin_planos') }}" class="botao botao--secundario">Cancelar</a>
+      {% endif %}
+    </div>
+  </form>
+</div>
+
+<div class="painel">
+  <h2>Planos cadastrados</h2>
+  {% if planos %}
+    <table class="tabela">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Preço</th>
+          <th>Benefícios</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in planos %}
+          <tr>
+            <td>{{ p.nome }}</td>
+            <td>R$ {{ "%.2f"|format(p.preco)|replace(".", ",") }}</td>
+            <td>{{ p.beneficios.split('\n')|length if p.beneficios else 0 }} item(ns)</td>
+            <td class="tabela__acoes">
+              <a href="{{ url_for('admin_planos', editar=p.id) }}" class="botao botao--secundario botao--pequeno">Editar</a>
+              <form method="post" action="{{ url_for('admin_excluir_plano', plano_id=p.id) }}" onsubmit="return confirm('Remover este plano?');">
+                <button type="submit" class="botao botao--perigo botao--pequeno">Excluir</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="vazio-tabela">Nenhum plano cadastrado ainda.</p>
+  {% endif %}
+</div>
+
+{% endblock %}

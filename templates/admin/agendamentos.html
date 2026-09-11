@@ -1,0 +1,47 @@
+{% extends "admin/base_admin.html" %}
+
+{% block titulo %}Agendamentos{% endblock %}
+
+{% block conteudo_admin %}
+
+<div class="admin-cabecalho">
+  <div>
+    <h1>Agendamentos</h1>
+    <p>Todos os clientes que reservaram um horário.</p>
+  </div>
+</div>
+
+<div class="painel">
+  {% if agendamentos %}
+    <table class="tabela">
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Telefone</th>
+          <th>Data</th>
+          <th>Hora</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in agendamentos %}
+          <tr>
+            <td>{{ a.nome_cliente }}</td>
+            <td>{{ a.telefone or "—" }}</td>
+            <td>{{ a.data|data_br }}</td>
+            <td>{{ a.hora }}</td>
+            <td class="tabela__acoes">
+              <form method="post" action="{{ url_for('admin_excluir_agendamento', agendamento_id=a.id) }}" onsubmit="return confirm('Cancelar este agendamento? O horário volta a ficar disponível.');">
+                <button type="submit" class="botao botao--perigo botao--pequeno">Cancelar</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="vazio-tabela">Nenhum agendamento ainda.</p>
+  {% endif %}
+</div>
+
+{% endblock %}
